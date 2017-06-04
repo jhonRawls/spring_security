@@ -13,7 +13,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.security.dto.ResultDto;
 
 import io.jsonwebtoken.Claims;
@@ -24,8 +23,8 @@ public class TokenAuth {
 
 	static final long EXPIRATIONTIME = 432_000_000; // 5天
 	static final String SECRET = "!$Xuop@^&%x$Sci(hs_+$"; // JWT密码
-	static final String TOKEN_PREFIX = "Bearer"; // Token前缀
-	static final String HEADER_STRING = "Authorization";// 存放Token的Header Key
+	static final String TOKEN_PREFIX = "access_token"; // Token前缀
+	static final String HEADER_STRING = "token";// 存放Token的Header Key
 	// JWT生成方法
 
 	public static void addAuthentication(HttpServletResponse response, String username) {
@@ -40,7 +39,6 @@ public class TokenAuth {
 				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
 				// 签名设置
 				.signWith(SignatureAlgorithm.HS512, SECRET).compact();
-
 		// 将 JWT 写入 body
 		try {
 			response.setContentType("application/json");

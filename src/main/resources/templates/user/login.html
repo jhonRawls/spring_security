@@ -2,11 +2,32 @@
 <html>
 <head>
 <title>用户登录</title>
+<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
 </head>
 <body>
 	<form>
-		账号<input type="input" value="" /><br /> 密码<input type="input"  value=""/>
-		
+		账号<input type="text" value="" id="userName" />
+		<br />
+		 密码<input type="password" value="" id="passWord" />
+		 <br />
+		 <input type="button" value="登录" id="login" />
 	</form>
+	<script type="text/javascript">
+		$(function() {
+			$("#login").bind("click",function (){
+				var userInfo={};
+				userInfo.userName=$("#userName").val();
+				userInfo.passWord=$("#passWord").val();
+				$.ajax({
+					type:"POST",
+					url:"/user/login",
+					data:userInfo,
+					success:function(msg){
+						console.log(msg);
+					}
+				});
+			});
+		});
+	</script>
 </body>
 </html>

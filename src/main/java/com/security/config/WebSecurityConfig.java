@@ -1,10 +1,13 @@
 package com.security.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -24,6 +27,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/").permitAll()
 				// 所有 /login 的POST请求 都放行
 				.antMatchers(HttpMethod.GET, "/user/tologin").permitAll()
-				.antMatchers(HttpMethod.POST, "/login").permitAll();
+				.antMatchers(HttpMethod.POST, "/user/login").permitAll()
+				 // 权限检查
+                .antMatchers("/hello").hasAuthority("AUTH_WRITE")
+                // 角色检查
+                .antMatchers("/admin").hasRole("ADMIN")
+                // 所有请求需要身份认证
+                .anyRequest().authenticated()
+                .and()
+                // 添加一个过滤器 所有访问 /login 的请求交给 JWTLoginFilter 来处理 这个类处理所有的JWT相关内容
+                .addFilterBefore(new JWTLoginFilter("/user/login", authenticationManager()),UsernamePasswordAuthenticationFilter.class)
+                // 添加一个过滤器验证其他请求的Token是否合法
+                .addFilterBefore(new JWTAuthenticationFilter(),UsernamePasswordAuthenticationFilter.class);
+	}
+	
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//		 auth.inMemoryAuthentication().withUser("admin").password("admin").roles("USER");
+//		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+		 // 使用自定义身份验证组件
+        auth.authenticationProvider(new CustomAuthenticationProvider());
 	}
 }

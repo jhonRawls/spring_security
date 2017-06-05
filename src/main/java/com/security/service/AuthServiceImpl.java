@@ -12,18 +12,18 @@ import org.springframework.stereotype.Service;
 
 import com.security.dao.mapper.UserMapper;
 import com.security.model.User;
-import com.security.util.JwtTokenUtil2;
+import com.security.util.JwtTokenUtil;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 	private AuthenticationManager authenticationManager;
 	private UserDetailsService userDetailsService;
-	private JwtTokenUtil2 jwtTokenUtil;
+	private JwtTokenUtil jwtTokenUtil;
 	private UserMapper userRepository;
 
 	@Autowired
 	public AuthServiceImpl(AuthenticationManager authenticationManager, UserDetailsService userDetailsService,
-			JwtTokenUtil2 jwtTokenUtil, UserMapper userRepository) {
+			JwtTokenUtil jwtTokenUtil, UserMapper userRepository) {
 		this.authenticationManager = authenticationManager;
 		this.userDetailsService = userDetailsService;
 		this.jwtTokenUtil = jwtTokenUtil;
@@ -48,6 +48,7 @@ public class AuthServiceImpl implements AuthService {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+		
 		final String token = jwtTokenUtil.generateToken(userDetails);
 		return token;
 	}

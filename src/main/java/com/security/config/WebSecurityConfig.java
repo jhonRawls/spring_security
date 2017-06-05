@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -41,22 +42,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css",
                         "/**/*.js"
                 ).permitAll()
-				// 所有 /login 的POST请求 都放行
+//				// 所有 /login 的POST请求 都放行
 				.antMatchers("/user/**").permitAll().anyRequest().authenticated();
-//				.antMatchers(HttpMethod.GET, "/user/toreg").permitAll()
-//				.antMatchers(HttpMethod.POST, "/user/login").permitAll()
-//				.antMatchers(HttpMethod.POST, "/user/register").permitAll()
-				// 权限检查
-//				.antMatchers("/hello").hasAuthority("AUTH_WRITE")
+//				// 权限检查
+////				.antMatchers("/hello").hasAuthority("AUTH_WRITE")
 //				// 角色检查
-//				.antMatchers("/admin").hasRole("ADMIN")
+////				.antMatchers("/admin").hasRole("ADMIN")
 //				// 所有请求需要身份认证
 //				.anyRequest().authenticated().and()
 //				// 添加一个过滤器 所有访问 /login 的请求交给 JWTLoginFilter 来处理 这个类处理所有的JWT相关内容
-//				.addFilterBefore(new JWTLoginFilter("/user/login", authenticationManager()),
-//						UsernamePasswordAuthenticationFilter.class)
+//				.addFilterBefore(new JWTLoginFilter("/admin/*", authenticationManager()),UsernamePasswordAuthenticationFilter.class)
 //				// 添加一个过滤器验证其他请求的Token是否合法
 //				.addFilterBefore(new JWTAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+		
+		http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+		
+//		  // 禁用缓存
+//		http.headers().cacheControl();
 	}
 
 	@Autowired
@@ -71,6 +73,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+    
+    
+    public JWTAuthenticationFilter authenticationTokenFilterBean() throws Exception {
+        return new JWTAuthenticationFilter();
+//        return new JwtAuthenticationTokenFilter();
     }
 }
 

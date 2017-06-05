@@ -42,7 +42,7 @@ public class UserController {
 	public JSONObject createAuthenticationToken(@RequestBody User user) {
 		final String token = authService.login(user.getUserName(), user.getPassWord());
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("tokne", token);
+		jsonObject.put("token", token);
 		return jsonObject;
 	}
 

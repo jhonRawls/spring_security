@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>用户注册</title>
+<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+	用户注册页面所有访问者可见
+	<form>
+		用户名<input type="text" value="" id="userName" /> <br /> 密码<input
+			type="password" value="" id="passWord" /> <br /> <input
+			type="button" value="用户注册" id="register" />
+	</form>
+	<script type="text/javascript">
+		$(function() {
+			$("#register").bind("click", function() {
+				var userInfo = {};
+				userInfo.userName = $("#userName").val();
+				userInfo.passWord = $("#passWord").val();
+				$.ajax({
+					type : "POST",
+					url : "/user/register",
+					dataType : "json",
+					contentType : "application/json",
+					data :JSON.stringify(userInfo),
+					success : function(msg) {
+						console.log(msg);
+					}
+				});
+			});
+		});
+	</script>
+</body>
+</html>

@@ -5,6 +5,7 @@
 <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
 </head>
 <body>
+用户登录页面所有访问者可见
 	<form>
 		账号<input type="text" value="" id="userName" />
 		<br />
@@ -21,7 +22,9 @@
 				$.ajax({
 					type:"POST",
 					url:"/user/login",
-					data:userInfo,
+					dataType : "json",
+					contentType : "application/json",
+					data:JSON.stringify(userInfo),
 					success:function(msg){
 						console.log(msg);
 					}

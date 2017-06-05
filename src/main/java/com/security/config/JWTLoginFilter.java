@@ -16,7 +16,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.alibaba.fastjson.JSON;
 import com.security.dto.ResultDto;
-import com.security.util.TokenAuth;
+import com.security.util.JwtTokenUtil;
 
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -34,12 +34,16 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 		return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(creds.getUserName(), creds.getPassWord()));
 	}
 
+
+	//验证成功后调用
 	@Override
 	protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
 			Authentication auth) throws IOException, ServletException {
-		TokenAuth.addAuthentication(res, auth.getName());
+		JwtTokenUtil.addAuthentication(res, auth.getName());
 	}
 	
+
+	//验证失败后调用，这里直接灌入500错误返回，由于同一JSON返回，HTTP就都返回200了
 	@Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         response.setContentType("application/json");

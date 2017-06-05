@@ -3,11 +3,12 @@
 *.war
 *.ear
 *.class
+*.apk
 
 # eclipse specific git ignore
 *.pydevproject
 .project
-.settings
+.settings/
 .metadata
 bin/**
 tmp/**
@@ -26,3 +27,5 @@ local.properties
 
 # Locally stored "Eclipse launch configurations"
 *.launch
+gen/
+proguard/

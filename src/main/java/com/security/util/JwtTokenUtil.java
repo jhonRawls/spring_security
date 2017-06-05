@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.security.dto.ResultDto;
@@ -19,7 +20,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-public class TokenAuth {
+@Component
+public class JwtTokenUtil {
 
 	static final long EXPIRATIONTIME = 432_000_000; // 5天
 	static final String SECRET = "!$Xuop@^&%x$Sci(hs_+$"; // JWT密码

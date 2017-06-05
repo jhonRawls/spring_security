@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.security.dao.mapper.UserMapper">
-	<select id="selectByName" parameterType="java.lang.String" resultType="com.security.model.UserInfo">
+	<select id="selectByName" parameterType="java.lang.String"
+		resultType="com.security.model.User">
 		select *
 		from t_user
-		where userName = #{userName,jdbcType=VARCHAR}
+		where userName =
+		#{userName,jdbcType=VARCHAR}
 	</select>
+
+	<insert id="insertUser" parameterType="com.security.model.User">
+		insert into t_user
+		(userName,
+		passWord)
+		values
+		(#{userName,jdbcType=VARCHAR},
+		#{passWord,jdbcType=VARCHAR})
+	</insert>
 </mapper>

@@ -18,7 +18,7 @@ public class UserController {
 	@Autowired
 	private AuthService authService;
 
-	@RequestMapping(value = "/tologin", method = { RequestMethod.GET })
+	@RequestMapping(value = "/login", method = { RequestMethod.GET })
 	public String tologin() {
 		return "user/login";
 	}

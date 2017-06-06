@@ -6,16 +6,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 //只有 管理员权限才可以操作
-@PreAuthorize("hasRole('ADMIN')") 
 @RequestMapping("/admin")
 @Controller
+@PreAuthorize("hasAuthority('ADMIN')") 
 public class AdminController {
-	@RequestMapping(value = "/toOrderList",method = {RequestMethod.GET})
+	@RequestMapping(value = "/orderList",method = {RequestMethod.GET})
 	public String toOrderList(){
 		return "admin/orderList";
 	}
 	
-	@RequestMapping(value = "/toUserList",method = {RequestMethod.GET})
+	@RequestMapping(value = "/userList",method = {RequestMethod.GET})
 	public String toUserList(){
 		return "admin/userList";
 	}

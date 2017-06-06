@@ -1,13 +1,10 @@
 package com.security.util;
 
-import java.io.IOException;
-import java.security.SignatureException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,9 +13,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import com.alibaba.fastjson.JSON;
-import com.security.dto.ResultDto;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -31,31 +25,11 @@ public class JwtTokenUtil {
 	static final String SECRET = "!$Xuop@^&%x$Sci(hs_+$"; // JWT密码
 	static final String TOKEN_PREFIX = "access_token"; // Token前缀
 	static final String HEADER_STRING = "token";// 存放Token的Header Key
-//	// JWT生成方法
-//
-//	public static void addAuthentication(HttpServletResponse response, String username) {
-//		// 生成JWT
-//		String JWT = Jwts.builder()
-//				// 保存权限（角色）
-//				.claim("authorities", "ROLE_ADMIN,AUTH_WRITE")
-//				// 用户名写入标题
-//				.setSubject(username)
-//				// 有效期设置
-//				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
-//				// 签名设置
-//				.signWith(SignatureAlgorithm.HS512, SECRET).compact();
-//		// 将 JWT 写入 body
-//		try {
-//			response.setContentType("application/json");
-//			response.setStatus(HttpServletResponse.SC_OK);
-//			ResultDto<String> result=new ResultDto<>();
-//			result.setResult(JWT);
-//			response.getOutputStream().println(JSON.toJSONString(result));
-//			response.getOutputStream().println("");
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
+
+	// 如果我们足够相信token中的数据，也就是我们足够相信签名token的secret的机制足够好
+	// 这种情况下，我们可以不用再查询数据库，而直接采用token中的数据
+	// 本例中，我们还是通过Spring Security的 @UserDetailsService 进行了数据查询
+	// 但简单验证的话，你可以采用直接验证token是否合法来避免昂贵的数据查询
 
 	// JWT验证方法
 	public static Authentication ValidateAuthenToken(HttpServletRequest request) {
@@ -73,7 +47,6 @@ public class JwtTokenUtil {
 			String user = claims.getSubject();
 			// 得到 权限（角色）
 			List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
-
 			// 返回验证令牌
 			return user != null ? new UsernamePasswordAuthenticationToken(user, null, authorities) : null;
 		}
@@ -81,10 +54,10 @@ public class JwtTokenUtil {
 	}
 
 	public String generateToken(UserDetails userDetails) {
-		String oauths=StringUtils.join(userDetails.getAuthorities(), ",");
+		String oauths = StringUtils.join(userDetails.getAuthorities(), ",");
 		String JWT = Jwts.builder()
 				// 保存权限（角色）
-				.claim("authorities",oauths)
+				.claim("authorities", oauths)
 				// 用户名写入标题
 				.setSubject(userDetails.getUsername())
 				// 有效期设置
@@ -98,10 +71,9 @@ public class JwtTokenUtil {
 		return Jwts.builder().setClaims(claims).setExpiration(generateExpirationDate())
 				.signWith(SignatureAlgorithm.HS512, SECRET).compact();
 	}
-	
+
 	private Date generateExpirationDate() {
 		return new Date(System.currentTimeMillis() + EXPIRATIONTIME * 1000);
 	}
 
-	
 }

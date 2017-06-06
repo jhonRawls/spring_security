@@ -2,7 +2,6 @@ package com.security.config;
 
 import java.io.IOException;
 
-import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +16,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.alibaba.fastjson.JSON;
 import com.security.dto.ResultDto;
-import com.security.util.JwtTokenUtil;
+import com.security.model.User;
 
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -31,7 +30,7 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 			throws AuthenticationException, IOException, ServletException {
 		try {
 			// JSON反序列化成 AccountCredentials
-			AccountCredentials creds = JSON.parseObject(request.getInputStream(), AccountCredentials.class);
+			User creds = JSON.parseObject(request.getInputStream(), User.class);
 			// 返回一个验证令牌
 			return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(creds.getUserName(), creds.getPassWord()));
 		} catch (Exception e) {

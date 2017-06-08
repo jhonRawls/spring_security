@@ -19,7 +19,7 @@ public class AuthServiceImpl implements AuthService {
 	private AuthenticationManager authenticationManager;
 	private UserDetailsService userDetailsService;
 	private JwtTokenUtil jwtTokenUtil;
-	private UserMapper userRepository;
+	private UserMapper userMapper;
 
 	@Autowired
 	public AuthServiceImpl(AuthenticationManager authenticationManager, UserDetailsService userDetailsService,
@@ -27,7 +27,7 @@ public class AuthServiceImpl implements AuthService {
 		this.authenticationManager = authenticationManager;
 		this.userDetailsService = userDetailsService;
 		this.jwtTokenUtil = jwtTokenUtil;
-		this.userRepository = userRepository;
+		this.userMapper = userRepository;
 	}
 
 	// 注册
@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String rawPassword = userToAdd.getPassWord();
 		userToAdd.setPassWord(encoder.encode(rawPassword));
-		userRepository.insertUser(userToAdd);
+		userMapper.insertUser(userToAdd);
 		return userToAdd;
 	}
 
